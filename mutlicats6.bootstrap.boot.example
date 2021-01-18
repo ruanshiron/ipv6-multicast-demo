@@ -1,0 +1,124 @@
+/* $XORP$ */
+
+interfaces {
+    interface ETH1NAME {
+        vif ETH1NAME {
+            address ETH1IPV6 {
+                prefix-length: 64
+            }
+            /* Note: The IPv6 link-local address must be configured */
+            address ETH1LOCALIPV6 {
+                prefix-length: 64
+            }
+        }
+    }
+    interface ETH2NAME {
+        vif ETH2NAME {
+            address ETH2IPV6 {
+                prefix-length: 64
+            }
+            /* Note: The IPv6 link-local address must be configured */
+            address ETH2LOCALIPV6 {
+                prefix-length: 64
+            }
+        }
+    }
+}
+
+fea {
+    unicast-forwarding6 {
+	    disable: false
+    }
+}
+
+plumbing {
+    mfea6 {
+        disable: false
+        interface ETH1NAME {
+            vif ETH1NAME {
+                disable: false
+            }
+        }
+        interface ETH2NAME {
+            vif ETH2NAME {
+                disable: false
+            }
+        }
+        interface register_vif {
+            vif register_vif {
+            /* Note: this vif should be always enabled */
+                disable: false
+            }
+        }
+    }
+}
+
+protocols {
+    mld {
+        interface ETH1NAME {
+            vif ETH1NAME {
+                disable: false
+            }
+        }
+        interface ETH2NAME {
+            vif ETH2NAME {
+                disable: false
+            }
+        }
+    }
+}
+
+protocols {
+    pimsm6 {
+        interface ETH1NAME {
+            vif ETH1NAME {
+                disable: false
+                dr-priority: 2
+            }
+        }
+        interface ETH2NAME {
+            vif ETH2NAME {
+                dr-priority: 2
+                disable: false
+            }
+        }
+        interface register_vif {
+            vif register_vif {
+            /* Note: this vif should be always enabled */
+                disable: false
+            }
+        }
+
+        bootstrap {
+            disable: false
+            cand-bsr {
+                scope-zone ff00::/8 {
+                    cand-bsr-by-vif-name: "ETH1NAME"
+                    bsr-priority: 128
+                    hash-mask-len: 30
+
+                }
+            }
+            cand-rp {
+                group-prefix ff00::/8 {
+                    cand-rp-by-vif-name: "ETH1NAME"
+                    rp-priority: 193
+                    rp-holdtime: 150
+                }
+            }
+        }
+
+        switch-to-spt-threshold {
+            /* approx. 1K bytes/s (10Kbps) threshold */
+            disable: false
+            interval: 100
+            bytes: 102400
+        }
+    }
+}
+
+protocols {
+    fib2mrib {
+        disable: false
+    }
+}

@@ -22,5 +22,13 @@ Vagrant.configure("2") do |config|
     echo "default via fec3::2" > /etc/sysconfig/network-scripts/route6-eth4
 
     service network restart
+
+    wget -O multicast6.boot https://raw.githubusercontent.com/ruanshiron/ipv6-multicast-demo/master/multicast6.boot.example
+    sed -in 's/ETH1NAME/eth3/g' ./multicast6.boot
+    sed -in 's/ETH2NAME/eth4/g' ./multicast6.boot
+    sed -in 's/ETH1IPV6/fec2::2/g' ./multicast6.boot
+    sed -in 's/ETH2IPV6/fec3::1/g' ./multicast6.boot
+    sed -in 's/ETH1LOCALIPV6/fe80::a00:27ff:fe3a:231a/g' ./multicast6.boot
+    sed -in 's/ETH2LOCALIPV6/fe80::a00:27ff:fe95:78c3/g' ./multicast6.boot
   SHELL
 end
