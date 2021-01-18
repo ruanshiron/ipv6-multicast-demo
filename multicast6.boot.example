@@ -1,24 +1,24 @@
 /* $XORP$ */
 
 interfaces {
-    interface eth1 {
-        vif eth1 {
-            address fec0::1 {
+    interface ETH1NAME {
+        vif ETH1NAME {
+            address ETH1IPV6 {
                 prefix-length: 64
             }
             /* Note: The IPv6 link-local address must be configured */
-            address fe80::a00:27ff:fefc:db77 {
+            address ETH1LOCALIPV6 {
                 prefix-length: 64
             }
         }
     }
-    interface eth2 {
-        vif eth2 {
-            address fec1::1 {
+    interface ETH2NAME {
+        vif ETH2NAME {
+            address ETH2IPV6 {
                 prefix-length: 64
             }
             /* Note: The IPv6 link-local address must be configured */
-            address fe80::a00:27ff:febc:8801 {
+            address ETH2LOCALIPV6 {
                 prefix-length: 64
             }
         }
@@ -34,13 +34,13 @@ fea {
 plumbing {
     mfea6 {
         disable: false
-        interface eth1 {
-            vif eth1 {
+        interface ETH1NAME {
+            vif ETH1NAME {
                 disable: false
             }
         }
-        interface eth2 {
-            vif eth2 {
+        interface ETH2NAME {
+            vif ETH2NAME {
                 disable: false
             }
         }
@@ -55,13 +55,13 @@ plumbing {
 
 protocols {
     mld {
-        interface eth1 {
-            vif eth1 {
+        interface ETH1NAME {
+            vif ETH1NAME {
                 disable: false
             }
         }
-        interface eth2 {
-            vif eth2 {
+        interface ETH2NAME {
+            vif ETH2NAME {
                 disable: false
             }
         }
@@ -70,14 +70,14 @@ protocols {
 
 protocols {
     pimsm6 {
-        interface eth1 {
-            vif eth1 {
+        interface ETH1NAME {
+            vif ETH1NAME {
                 disable: false
                 dr-priority: 2
             }
         }
-        interface eth2 {
-            vif eth2 {
+        interface ETH2NAME {
+            vif ETH2NAME {
                 dr-priority: 2
                 disable: false
             }
