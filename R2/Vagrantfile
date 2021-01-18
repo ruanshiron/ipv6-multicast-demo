@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "ruanshiron/centos-6.6-with-xorp"
+  config.ssh.username = "root"
+  config.ssh.password = "vagrant"
+  config.vm.network "private_network", virtualbox__intnet: "intnet1"
+  config.vm.network "private_network", virtualbox__intnet: "intnet2"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "NETWORKING=yes\nHOSTNAME=R2\nIPV6FORWARDING=yes\nRES_OPTIONS=\"single-request-reopen\"" > /etc/sysconfig/network
+
+    echo "DEVICE=eth3\nONBOOT=yes\nIPV6ADDR=fec1::2/64\nNAME=eth3\nHWADDR=08:00:27:FF:E9:9D\nTYPE=Ethernet\nIPV6INIT=yes\nIPV6_AUTOCONF=no\nIPV6_DEFROUTE=no\n" > /etc/sysconfig/network-scripts/ifcfg-eth3
+    echo "DEVICE=eth4\nONBOOT=yes\nIPV6ADDR=fec2::1/64\nNAME=eth4\nHWADDR=08:00:27:0A:35:D9\nTYPE=Ethernet\nIPV6INIT=yes\nIPV6_AUTOCONF=no\nIPV6_DEFROUTE=no\n" > /etc/sysconfig/network-scripts/ifcfg-eth4
+
+    echo "fec0::/64 via fec1::1" > /etc/sysconfig/network-scripts/route6-eth3
+    echo "fec3::/64 via fec2::2\ndefault via fec2::2" > /etc/sysconfig/network-scripts/route6-eth4
+
+    service network restart
+  SHELL
+end

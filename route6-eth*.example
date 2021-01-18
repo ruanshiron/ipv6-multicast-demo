@@ -1,0 +1,3 @@
+fec3::/64 via fec2::2
+fec4::/64 via fec2::2
+default via fec2::2

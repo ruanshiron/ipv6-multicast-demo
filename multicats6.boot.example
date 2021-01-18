@@ -1,0 +1,116 @@
+/* $XORP$ */
+
+interfaces {
+    interface eth1 {
+        vif eth1 {
+            address fec0::1 {
+                prefix-length: 64
+            }
+            /* Note: The IPv6 link-local address must be configured */
+            address fe80::a00:27ff:fefc:db77 {
+                prefix-length: 64
+            }
+        }
+    }
+    interface eth2 {
+        vif eth2 {
+            address fec1::1 {
+                prefix-length: 64
+            }
+            /* Note: The IPv6 link-local address must be configured */
+            address fe80::a00:27ff:febc:8801 {
+                prefix-length: 64
+            }
+        }
+    }
+}
+
+fea {
+    unicast-forwarding6 {
+	    disable: false
+    }
+}
+
+plumbing {
+    mfea6 {
+        disable: false
+        interface eth1 {
+            vif eth1 {
+                disable: false
+            }
+        }
+        interface eth2 {
+            vif eth2 {
+                disable: false
+            }
+        }
+        interface register_vif {
+            vif register_vif {
+            /* Note: this vif should be always enabled */
+                disable: false
+            }
+        }
+    }
+}
+
+protocols {
+    mld {
+        interface eth1 {
+            vif eth1 {
+                disable: false
+            }
+        }
+        interface eth2 {
+            vif eth2 {
+                disable: false
+            }
+        }
+    }
+}
+
+protocols {
+    pimsm6 {
+        interface eth1 {
+            vif eth1 {
+                disable: false
+                dr-priority: 2
+            }
+        }
+        interface eth2 {
+            vif eth2 {
+                dr-priority: 2
+                disable: false
+            }
+        }
+        interface register_vif {
+            vif register_vif {
+            /* Note: this vif should be always enabled */
+                disable: false
+            }
+        }
+
+        /* Note: static-rps and bootstrap should not be mixed */
+
+        static-rps {
+            rp fec2::2 {
+                group-prefix ff00::/8 {
+                }
+            }
+        }
+
+        switch-to-spt-threshold {
+            /* approx. 1K bytes/s (10Kbps) threshold */
+            disable: false
+            interval: 100
+            bytes: 102400
+        }
+    }
+}
+
+protocols {
+    fib2mrib {
+        disable: false
+    }
+}
+
+     
